@@ -10,7 +10,7 @@ namespace Rest
 {
     class CityWeather
     {
-        private string appId = "51ab86c90d3e2cbc157ef4bc830cd09e";
+        private string appId = "USER_INPUT";
         private string baseAddress = "http://api.openweathermap.org/data/2.5";
         private HttpClient client;
         public CityWeather()
