@@ -16,30 +16,27 @@ namespace WebApplication2
 
         private const string WeatherCityTable = "weathercityn";
 
+        private CloudStorageAccount storageAccount;
+
+        public WeatherDataManager()
+        {
+            this.storageAccount = CloudStorageAccount.Parse(
+                CloudConfigurationManager.GetSetting("StorageConnectionString"));
+        }
+
         public void UpdateHistoryInfoToTable(WeatherInfoEntity model)
         {
-            // Retrieve storage account from connection string
-            CloudStorageAccount storageAccount = CloudStorageAccount.Parse(
-                CloudConfigurationManager.GetSetting("StorageConnectionString"));
             CreateBlobTableAndUploadWeatherHistoryInfo(storageAccount, model);
         }
 
         public void UpdateCityInfoToTable(string city, string date)
         {
-            // Retrieve storage account from connection string
-            CloudStorageAccount storageAccount = CloudStorageAccount.Parse(
-                CloudConfigurationManager.GetSetting("StorageConnectionString"));
-
             CityInfoEntity weatherInfo = new CityInfoEntity(city, date);
             CreateBlobTableAndUploaCityInfo(storageAccount, weatherInfo);
         }
 
         public void DeleteWeatherInfo(string city, string date)
         {
-            // Retrieve storage account from connection string
-            CloudStorageAccount storageAccount = CloudStorageAccount.Parse(
-                CloudConfigurationManager.GetSetting("StorageConnectionString"));
-
             CloudTableClient tableClient = storageAccount.CreateCloudTableClient();
             CloudTable table = tableClient.GetTableReference(WeatherHistoryTable);
             //create the table if it doesn't exist.
@@ -60,8 +57,6 @@ namespace WebApplication2
 
         public bool IsCityInMonitorList(string city)
         {
-            CloudStorageAccount storageAccount = CloudStorageAccount.Parse(
-                CloudConfigurationManager.GetSetting("StorageConnectionString"));
             CloudTableClient tableClient = storageAccount.CreateCloudTableClient();
             CloudTable table = tableClient.GetTableReference(WeatherCityTable);
             //create the table if it doesn't exist.
@@ -74,8 +69,6 @@ namespace WebApplication2
 
         public string[] GetAllCities()
         {
-            CloudStorageAccount storageAccount = CloudStorageAccount.Parse(
-                CloudConfigurationManager.GetSetting("StorageConnectionString"));
             CloudTableClient tableClient = storageAccount.CreateCloudTableClient();
             CloudTable table = tableClient.GetTableReference(WeatherCityTable);
 
@@ -92,8 +85,6 @@ namespace WebApplication2
 
         public List<WeatherInfoEntity> GetWeatherHistory(string city)
         {
-            CloudStorageAccount storageAccount = CloudStorageAccount.Parse(
-                CloudConfigurationManager.GetSetting("StorageConnectionString"));
             CloudTableClient tableClient = storageAccount.CreateCloudTableClient();
             CloudTable table = tableClient.GetTableReference(WeatherHistoryTable);
             //create the table if it doesn't exist.

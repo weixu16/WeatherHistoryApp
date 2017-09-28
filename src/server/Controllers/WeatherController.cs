@@ -13,6 +13,13 @@ namespace WebApplication2.Controllers
     [RoutePrefix("api/weather")]
     public class WeatherController : ApiController
     {
+        private UsCityListManager uscityManager;
+
+        public WeatherController()
+        {
+            this.uscityManager = new UsCityListManager();
+        }
+
         [Route("getHistory/{city}")]
         public WeatherHistoryModel GetWeatherHistory(string city)
         {
@@ -22,7 +29,7 @@ namespace WebApplication2.Controllers
             {
                 List<WeatherInfoEntity> weatherInfo = weatherDataManager.GetWeatherHistory(city);
 
-                weatherInfo = weatherInfo.OrderBy(o => DateTime.Parse(o.Date)).ToList();
+                weatherInfo = weatherInfo.OrderByDescending(o => DateTime.Parse(o.Date)).Take(50).OrderBy(o => DateTime.Parse(o.Date)).ToList();
 
                 List<double> highTempList = new List<double>();
                 List<double> lowTempList = new List<double>();
@@ -89,6 +96,12 @@ namespace WebApplication2.Controllers
             }
         }
 
+        [Route("getCityListFromPrefix")]
+        public string[] getCityListFromPrefix()
+        {
+            return this.uscityManager.getCityNameFromPrefix("");
+        }
+
         private void QueryOpenWeatherAndUpdateTable(CityWeather cityWeather, WeatherDataManager weatherDataManager, string city)
         {
             Rootobject weatherInfo = cityWeather.GetWeather(city);
@@ -107,5 +120,7 @@ namespace WebApplication2.Controllers
         {
             return (k * 9.0 / 5.0 - 459.67);
         }
+
+        
     }
 }
